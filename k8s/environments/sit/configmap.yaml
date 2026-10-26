@@ -1,0 +1,15 @@
+# TEMPLATE ONLY — not applied by kustomize. CI creates customers-config from GH vars.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: customers-config
+  labels:
+    app.kubernetes.io/name: customers
+    environment: sit
+data:
+  SPRING_PROFILES_ACTIVE: "sit"
+  APP_ENVIRONMENT: "sit"
+  SERVER_PORT: "8080"
+  DB_POOL_MAX_SIZE: "12"
+  DB_POOL_MIN_IDLE: "3"
+  SPRING_DATASOURCE_URL: "jdbc:postgresql://<pg-server>.postgres.database.azure.com:5432/customers_sit?sslmode=require"

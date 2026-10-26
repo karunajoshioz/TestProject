@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'org.springframework.boot' version '4.1.1'
-    id 'io.spring.dependency-management' version '1.1.4'
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
 group = 'com.example'
@@ -18,19 +18,35 @@ repositories {
 }
 
 dependencies {
+    // Web / REST
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    // Validation for request bodies
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    // JPA persistence against PostgreSQL
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    // Actuator for health/readiness probes (Kubernetes)
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-
+    // Flyway schema migrations
     implementation 'org.springframework.boot:spring-boot-starter-flyway'
     implementation 'org.flywaydb:flyway-database-postgresql'
 
+    // Azure Database for PostgreSQL driver
     runtimeOnly 'org.postgresql:postgresql'
 
+    // H2 for tests (no external Postgres required in CI)
+    runtimeOnly 'com.h2database:h2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+// Produce a layered JAR suitable for Docker multi-stage builds
+bootJar {
+    layered {
+        enabled = true
+    }
+}
+

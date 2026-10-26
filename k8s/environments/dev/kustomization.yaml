@@ -1,0 +1,25 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Shared AKS cluster - customers Deployment (separate from other apps)
+namespace: app-dev
+
+resources:
+  - ../../base
+  - namespace.yaml
+  # customers-config + customers-db-secret are created by CI from GitHub Environment
+  # vars/secrets (configmap.yaml / secret.yaml are templates only — do not apply here)
+  - ingress.yaml
+
+patchesStrategicMerge:
+  # replicas owned by HPA (hpa-patch.yaml) - do not set Deployment.spec.replicas
+  - hpa-patch.yaml
+  - service-patch.yaml
+
+commonLabels:
+  environment: dev
+
+images:
+  - name: YOUR_ACR.azurecr.io/customers
+    newName: YOUR_ACR.azurecr.io/customers
+    newTag: latest

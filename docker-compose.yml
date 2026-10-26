@@ -1,0 +1,49 @@
+# Local development stack: PostgreSQL + the Customers Spring Boot app
+# (Local stack — host ports chosen to avoid clashes)
+# Usage:
+#   docker compose up --build
+#   curl http://localhost:8081/api/v1/customers
+#
+# Or run only the database and start the app with Gradle:
+#   docker compose up -d postgres
+#   ./gradlew bootRun --args='--spring.profiles.active=local'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: customers-postgres
+    environment:
+      POSTGRES_DB: customers
+      POSTGRES_USER: customers
+      POSTGRES_PASSWORD: customers
+    ports:
+      # Host 5433 avoids clash with a default local Postgres on 5432
+      - "5433:5432"
+    volumes:
+      - customers_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U customers -d customers"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: customers-app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: local
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/customers
+      SPRING_DATASOURCE_USERNAME: customers
+      SPRING_DATASOURCE_PASSWORD: customers
+      SERVER_PORT: "8080"
+    ports:
+      # Host 8081 avoids clash with another local app on 8080
+      - "8081:8080"
+
+volumes:
+  customers_pgdata:

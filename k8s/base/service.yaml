@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: customers
+  labels:
+    app.kubernetes.io/name: customers
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: customers
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP

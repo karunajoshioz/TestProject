@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: app-prod
+
+resources:
+  - ../../base
+  - namespace.yaml
+  # customers-config + customers-db-secret are created by CI (templates only in repo)
+  - ingress.yaml
+
+patchesStrategicMerge:
+  - hpa-patch.yaml
+  - resources-patch.yaml
+
+commonLabels:
+  environment: prod
+
+images:
+  - name: YOUR_ACR.azurecr.io/customers
+    newName: YOUR_ACR.azurecr.io/customers
+    newTag: latest

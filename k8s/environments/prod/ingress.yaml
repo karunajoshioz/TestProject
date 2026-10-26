@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: customers
+  labels:
+    app.kubernetes.io/name: customers
+    environment: prod
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "2m"
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: customers.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: customers
+                port:
+                  number: 80
+  # tls:
+  #   - hosts:
+  #       - customers.example.com
+  #     secretName: customers-prod-tls

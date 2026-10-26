@@ -1,0 +1,8 @@
+# Shared AKS namespace for this environment.
+# Idempotent apply - create if missing.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: app-dev
+  labels:
+    environment: dev

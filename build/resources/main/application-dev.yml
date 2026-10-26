@@ -1,0 +1,39 @@
+# =============================================================================
+# Profile: dev
+# Azure AKS Development cluster + Azure Database for PostgreSQL (Flexible Server)
+#
+# Activate on AKS via ConfigMap:
+#   SPRING_PROFILES_ACTIVE=dev
+#
+# Expected env vars (ConfigMap + Secret / Key Vault CSI):
+#   SPRING_DATASOURCE_URL
+#   SPRING_DATASOURCE_USERNAME
+#   SPRING_DATASOURCE_PASSWORD
+# =============================================================================
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  jpa:
+    show-sql: false
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    hikari:
+      maximum-pool-size: ${DB_POOL_MAX_SIZE:8}
+      minimum-idle: ${DB_POOL_MIN_IDLE:2}
+
+logging:
+  level:
+    root: INFO
+    com.example.demo: DEBUG
+    org.flywaydb: INFO
+
+management:
+  endpoint:
+    health:
+      show-details: when_authorized
