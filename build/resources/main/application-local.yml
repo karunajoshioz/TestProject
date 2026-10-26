@@ -1,3 +1,15 @@
+# =============================================================================
+# Profile: local
+# Developer laptop. Use Docker Compose Postgres (see docker-compose.yml).
+#
+# Activate:
+#   ./gradlew bootRun --args='--spring.profiles.active=local'
+#   or SPRING_PROFILES_ACTIVE=local
+#
+# Start DB:
+#   docker compose up -d postgres
+# =============================================================================
+
 spring:
   config:
     activate:
@@ -7,12 +19,20 @@ spring:
     show-sql: true
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: postgres
-    password: demo
-    driver-class-name: org.postgresql.Driver
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5433/customers}
+    username: ${SPRING_DATASOURCE_USERNAME:customers}
+    password: ${SPRING_DATASOURCE_PASSWORD:customers}
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 1
 
 logging:
   level:
+    com.example.demo: DEBUG
     org.hibernate.SQL: DEBUG
     org.flywaydb: DEBUG
+
+management:
+  endpoint:
+    health:
+      show-details: always

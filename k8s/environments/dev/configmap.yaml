@@ -1,0 +1,20 @@
+# TEMPLATE ONLY — not applied by kustomize.
+# CI sets customers-config from GitHub Environment:
+#   vars.SPRING_DATASOURCE_URL
+#   (+ profile / pool / DB_SCHEMA=customers)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: customers-config
+  labels:
+    app.kubernetes.io/name: customers
+    environment: dev
+data:
+  SPRING_PROFILES_ACTIVE: "dev"
+  APP_ENVIRONMENT: "dev"
+  SERVER_PORT: "8080"
+  DB_POOL_MAX_SIZE: "8"
+  DB_POOL_MIN_IDLE: "2"
+  DB_SCHEMA: "customers"
+  # Real value comes from GitHub Environment variable SPRING_DATASOURCE_URL at deploy time
+  SPRING_DATASOURCE_URL: "SET_VIA_GITHUB_VARIABLE"

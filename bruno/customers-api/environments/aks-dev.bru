@@ -1,0 +1,4 @@
+vars {
+  # Replace with: kubectl -n app-dev get svc customers -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+  baseUrl: http://REPLACE_WITH_CUSTOMERS_LB_IP
+}

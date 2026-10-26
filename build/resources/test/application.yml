@@ -1,0 +1,25 @@
+# Test profile: in-memory H2 — no external Postgres required for CI.
+# Flyway migrations use Postgres-specific types (TIMESTAMPTZ/BIGSERIAL),
+# so tests let Hibernate create the schema from JPA entities instead.
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;INIT=CREATE SCHEMA IF NOT EXISTS customers
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        default_schema: customers
+        hbm2ddl:
+          create_namespaces: true
+  flyway:
+    enabled: false
+
+management:
+  endpoint:
+    health:
+      show-details: always

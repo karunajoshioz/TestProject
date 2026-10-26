@@ -1,0 +1,34 @@
+# =============================================================================
+# Profile: sit
+# Azure AKS System Integration Test (SIT) + Azure Database for PostgreSQL
+#
+# Activate on AKS via ConfigMap:
+#   SPRING_PROFILES_ACTIVE=sit
+# =============================================================================
+
+spring:
+  config:
+    activate:
+      on-profile: sit
+
+  jpa:
+    show-sql: false
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    hikari:
+      maximum-pool-size: ${DB_POOL_MAX_SIZE:12}
+      minimum-idle: ${DB_POOL_MIN_IDLE:3}
+
+logging:
+  level:
+    root: INFO
+    com.example.demo: INFO
+    org.flywaydb: WARN
+
+management:
+  endpoint:
+    health:
+      show-details: never

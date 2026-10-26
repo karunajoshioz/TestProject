@@ -1,0 +1,33 @@
+meta {
+  name: Create customer
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/v1/customers
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Bruno Smoke",
+    "email": "bruno.smoke@example.com"
+  }
+}
+
+script:post-response {
+  if (res.getStatus() === 201) {
+    bru.setVar("customerId", res.getBody().id);
+  }
+}
+
+assert {
+  res.status: eq 201
+  res.body.name: eq Bruno Smoke
+}

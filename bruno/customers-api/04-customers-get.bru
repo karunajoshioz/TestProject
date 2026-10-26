@@ -1,0 +1,15 @@
+meta {
+  name: Get customer by id
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/v1/customers/{{customerId}}
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+}

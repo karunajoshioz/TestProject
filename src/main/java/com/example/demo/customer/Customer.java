@@ -2,7 +2,8 @@ package com.example.demo.customer;
 import jakarta.persistence.*;
 import java.time.Instant;
 @Entity
-@Table(name="customers", uniqueConstraints=@UniqueConstraint(name="uk_customers_email", columnNames="email"))
+@Table(schema = "customers", name = "customers",
+        uniqueConstraints = @UniqueConstraint(name = "uk_customers_email", columnNames = "email"))
 public class Customer {
     @Id @GeneratedValue(strategy=GenerationType.IDENTITY) private Long id;
     @Column(nullable=false, length=100) private String name;
